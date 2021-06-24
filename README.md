@@ -1,4 +1,35 @@
-# 접속정보
+## 개발환경 셋팅
+1. vagrant 설치
+https://www.44bits.io/ko/post/vagrant-tutorial#%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%EC%9D%84-%EC%9C%84%ED%95%9C-%ED%94%84%EB%A1%9C%EB%B9%84%EC%A0%80%EB%84%88
+
+2. vagrantfile 작성을 위해 필요한 하드웨어/소프트웨어 사양 파악
+    ```
+    ## 서버 등에 접속하여 설치된 우분투 사양 파악
+    # 리눅스 배포판 확인
+    cat /etc/*release
+    
+    # 커널 버전 확인
+    cat /proc/version
+    uname -r
+    
+    # cpu 전체 정보
+    cat /proc/cpuinfo
+    
+    # 메모리 정보
+    free -h
+    
+    # 하드디스크 정보
+    df -h
+    
+    # 그래픽카드 정보
+    lspci | grep -i VGA
+    
+    # 엔비디아 경우에 다음 사용가능
+    nvidia-smi
+    ```
+3. vagrantfile 작성
+4. 
+## 접속정보
 ```py
 host    : 
 guest   : 10.0.2.15
