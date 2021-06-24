@@ -11,11 +11,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
+  
   # config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
@@ -23,7 +19,11 @@ Vagrant.configure("2") do |config|
   #   # Customize the amount of memory on the VM:
   #   vb.memory = "1024"
   # end
-  #
+  config.vm.provider "virtualbox" do |machine|
+    machine.memory = "4096"
+    machine.cpus   = 4
+  end
+
   # View the documentation for the provider you are using for more
   # information on available options.
 
@@ -34,4 +34,8 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    wget -qO- https://get.docker.com/ | sh
+    usermod -aG docker vagrant
+  SHELL
 end
