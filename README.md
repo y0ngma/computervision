@@ -81,9 +81,28 @@ dpkg --get-selections | grep docker
 ```
 
 ## vagrant ssh 후 나스연결
+
+### 시작할때 자동으로 마운트 시켜주기 위해선 fstab파일을 수정해야한다
+1. sudo mkdir -p /home/nas
+    - '마운트시킬 NAS 경로'와 '로컬에서 해당 경로의 파일을 확인할수 있는 destination 경로'를 생성한다
+1. sudo vim /home/.naspassword
+    - 비밀번호 파일생성(파일명무관) 및 접속할 계정정보 입력
+    ```bash
+    username=사용자이름
+    password=비밀번호
+    ```
+1. sudo vim /etc/fstab
+    - 위에서 확인한 경로 3가지를 다음과 같이 입력한다
+    - [//ip주소/나머지src경로] [로컬dst경로] cifs credentials=[/비번파일경로] 
+    ```bash
+    //192.168.0.12/homes/ /home/nas cifs credentials=/home/.naspassword,rw 0 0
+    ```
+1. sudo mount --all
+    - 저장 후 곧바로 실행시키기
+
 ### 에러로그
-```s
-# 마운트할 폴더 생성
+```bash
+# 마운트할 폴더 경로 한번에 생성
 vagrant@ubuntu-bionic:/home$ sudo mkdir -p qtumai/jason/nas/
 vagrant@ubuntu-bionic:/home$ cd qtumai/jason/
 
@@ -91,7 +110,7 @@ vagrant@ubuntu-bionic:/home$ cd qtumai/jason/
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs 192.168.0.12:/homes ./nas
 mount.cifs: bad UNC (192.168.0.12:/homes)
 
-# who am i 확인하면 사용자가 vagrant이기 때문에 안되나?
+# 터미널에서 who am i 으로 사용자 확인시 vagrant이기 때문에 안되나?
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas
 Password for root@//192.168.0.12/homes:  **********
 mount error(13): Permission denied
@@ -104,15 +123,8 @@ Password for admin@//192.168.0.12/homes:  **********
 # 드라이브 마운트 확인
 vagrant@ubuntu-bionic:/home/qtumai/jason$ df -h
 Filesystem            Size  Used Avail Use% Mounted on
-udev                  2.0G     0  2.0G   0% /dev
-tmpfs                 395M  656K  394M   1% /run
-/dev/sda1              39G  2.1G   37G   6% /
-tmpfs                 2.0G     0  2.0G   0% /dev/shm
-tmpfs                 5.0M     0  5.0M   0% /run/lock
-tmpfs                 2.0G     0  2.0G   0% /sys/fs/cgroup
-vagrant               477G  145G  332G  31% /vagrant
-tmpfs                 395M     0  395M   0% /run/user/1000
+...
 //192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
 
+# 다만, 위의 방법으로는 한번만 마운트되어 접속시마다 해줘야함
 ```
-
