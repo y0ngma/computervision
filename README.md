@@ -81,18 +81,27 @@ dpkg --get-selections | grep docker
 ```
 
 ## vagrant ssh 후 나스연결
+### 에러로그
 ```s
-# 에러로그
+# 마운트할 폴더 생성
 vagrant@ubuntu-bionic:/home$ sudo mkdir -p qtumai/jason/nas/
 vagrant@ubuntu-bionic:/home$ cd qtumai/jason/
+
+# 잘못된 문법
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs 192.168.0.12:/homes ./nas
 mount.cifs: bad UNC (192.168.0.12:/homes)
+
+# who am i 확인하면 사용자가 vagrant이기 때문에 안되나?
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas
 Password for root@//192.168.0.12/homes:  **********
 mount error(13): Permission denied
 Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
-vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas -o username=admin      
+
+# 사용자계정을 지정하니 접속됨
+vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas -o username=사용자계정명
 Password for admin@//192.168.0.12/homes:  **********
+
+# 드라이브 마운트 확인
 vagrant@ubuntu-bionic:/home/qtumai/jason$ df -h
 Filesystem            Size  Used Avail Use% Mounted on
 udev                  2.0G     0  2.0G   0% /dev
@@ -104,4 +113,6 @@ tmpfs                 2.0G     0  2.0G   0% /sys/fs/cgroup
 vagrant               477G  145G  332G  31% /vagrant
 tmpfs                 395M     0  395M   0% /run/user/1000
 //192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
+
 ```
+
