@@ -79,3 +79,29 @@ dpkg --get-selections | grep docker
 # docker-ce-cli (클라 : 도커명령 서버에전달) 설치됨
 
 ```
+
+## vagrant ssh 후 나스연결
+```s
+# 에러로그
+vagrant@ubuntu-bionic:/home$ sudo mkdir -p qtumai/jason/nas/
+vagrant@ubuntu-bionic:/home$ cd qtumai/jason/
+vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs 192.168.0.12:/homes ./nas
+mount.cifs: bad UNC (192.168.0.12:/homes)
+vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas
+Password for root@//192.168.0.12/homes:  **********
+mount error(13): Permission denied
+Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
+vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas -o username=admin      
+Password for admin@//192.168.0.12/homes:  **********
+vagrant@ubuntu-bionic:/home/qtumai/jason$ df -h
+Filesystem            Size  Used Avail Use% Mounted on
+udev                  2.0G     0  2.0G   0% /dev
+tmpfs                 395M  656K  394M   1% /run
+/dev/sda1              39G  2.1G   37G   6% /
+tmpfs                 2.0G     0  2.0G   0% /dev/shm
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+tmpfs                 2.0G     0  2.0G   0% /sys/fs/cgroup
+vagrant               477G  145G  332G  31% /vagrant
+tmpfs                 395M     0  395M   0% /run/user/1000
+//192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
+```
