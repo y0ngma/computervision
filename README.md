@@ -83,6 +83,7 @@ dpkg --get-selections | grep docker
 ## vagrant ssh 후 나스연결
 
 ### 시작할때 자동으로 마운트 시켜주기 위해선 fstab파일을 수정해야한다
+- vagrant shared folder에 아래 키파일과 다운폴더를 위치시켜서 용이하게 이용한다
 1. sudo mkdir -p /home/nas
     - '마운트시킬 NAS 경로'와 '로컬에서 해당 경로의 파일을 확인할수 있는 destination 경로'를 생성한다
 1. sudo vim /home/.naspassword
@@ -125,6 +126,5 @@ vagrant@ubuntu-bionic:/home/qtumai/jason$ df -h
 Filesystem            Size  Used Avail Use% Mounted on
 ...
 //192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
-
 # 다만, 위의 방법으로는 한번만 마운트되어 접속시마다 해줘야함
 ```
