@@ -34,8 +34,17 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-  config.vm.provision "shell", inline: <<-SHELL
-    wget -qO- https://get.docker.com/ | sh
-    usermod -aG docker vagrant
-  SHELL
+  # $script = <<-SCRIPT
+  # wget -qO- https://get.docker.com/ | sh
+  # usermod -aG docker vagrant
+
+  # echo "다음처럼 쌍따옴표는 역슬레쉬로 표현\"헬로우월드\"! I am provisioning my quest."
+  # date > /etc/vagrant_provisioned_at
+  # SCRIPT
+  $script2 = <<-'SCRIPT'
+  echo "다음처럼 쌍따옴표는 역슬레쉬로 표현\"헬로우월드\"! I am provisioning my quest."
+  date > /etc/vagrant_provisioned_at
+  SCRIPT
+  # config.vm.provision "shell", inline: $script
+  config.vm.provision "shell", inline: $script2
 end
