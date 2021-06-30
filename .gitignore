@@ -60,3 +60,6 @@ yarn-debug.log
 
 # Ignore Docker option files
 docker-compose.override.yml
+
+# 개인정보 보호
+bootstrap.sh
