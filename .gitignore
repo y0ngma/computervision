@@ -62,4 +62,4 @@ yarn-debug.log
 docker-compose.override.yml
 
 # 개인정보 보호
-bootstrap.sh
+nas_mount.sh
