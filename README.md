@@ -68,7 +68,8 @@ ssh auth method : private key
     - vagrant box add <address> : 박스 추가
     - vagrant box list          : 설치된 박스 리스트
     - vagrant box outdated      : 최신 업데이트 된 박스들 보여주기
-    - vagrant remove <address>  : 박스 삭제
+    - vagrant box remove <address>  : 박스 삭제
+        - 예:vagrant box remove ubuntu/bionic64 --box-version "20210609.0.0"
     - vagrant package           : 현재 실행중인 Virtualbox 를 재사용 가능한 box로 만든다.
 
 - 상태
@@ -85,7 +86,7 @@ ssh auth method : private key
     - vagrant plugin uninstall
     - vagrant plugin update
 
-## 도커
+## 도커 명령어
 ```bash
 # 우분투설치 및 우분투접속 후에 도커설치
 curl -s https://get.docker.com | sudo sh

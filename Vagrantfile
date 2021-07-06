@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
   # 작성 문법 예시
   config.vm.provision "shell", inline: "echo Hello, World 한줄"
   config.vm.provision "shell", inline: <<-SHELL
-    "여러줄 삽입가능형태"
+    echo "여러줄 삽입가능형태"
   SHELL
   $script = <<-'SCRIPT'
   echo "다음처럼 쌍따옴표는 역슬레쉬로 표현\"헬로우월드\"! I am provisioning my quest."
@@ -31,5 +31,7 @@ Vagrant.configure("2") do |config|
 
   # # NAS synology 마운트 최초 한번만 실행
   # config.vm.provision "shell", path: "nas_mount.sh"
+  
+  # config.vm.provision "shell", path: "bootstrap.sh"
 
 end
