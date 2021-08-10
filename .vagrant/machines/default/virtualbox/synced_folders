@@ -1,1 +1,1 @@
-{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/Users/home/qtumai/jason/computervision","disabled":false,"__vagrantfile":true}}}
+{"virtualbox":{"\\home\\qtumai\\jason\\computervision":{"guestpath":"\\home\\qtumai\\jason\\computervision","hostpath":"C:/Users/home/qtumai/jason/computervision/SHARED_FOLDER","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/Users/home/qtumai/jason/computervision","disabled":false,"__vagrantfile":true}}}
