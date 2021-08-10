@@ -123,6 +123,14 @@ dpkg --get-selections | grep docker
 1. sudo mount --all
     - 저장 후 곧바로 실행시키기
 
+
+## 파이선 및 라이브러리 설치
+## 파이선 코드 실행
+- l
+```bash
+python3.8 /vagrant/SHARED_FOLDER/test.py
+```
+
 ### 에러로그
 ```bash
 # 마운트할 폴더 경로 한번에 생성

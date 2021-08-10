@@ -45,5 +45,7 @@ Vagrant.configure("2") do |config|
     chown -R vagrant:vagrant /home/vagrant/miniconda
     /home/vagrant/miniconda/bin/conda install conda-build anaconda-client anaconda-build -y -q
   SHELL
+  # 판다스, 등 각종 라이브러리 설치
+  config.vm.provision "shell", path: "requirements.sh"
 
 end
