@@ -29,9 +29,21 @@ Vagrant.configure("2") do |config|
   SCRIPT
   config.vm.provision "shell", inline: $script
 
-  # # NAS synology 마운트 최초 한번만 실행
-  # config.vm.provision "shell", path: "nas_mount.sh"
-  
-  # config.vm.provision "shell", path: "bootstrap.sh"
+  # NAS synology 마운트 최초 한번만 실행
+  config.vm.provision "shell", path: "nas_mount.sh"
+  # docker
+  config.vm.provision "shell", path: "bootstrap.sh"
+  # miniconda 2
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update -q
+    su - vagrant
+    wget -q https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    chmod +x miniconda.sh
+    ./miniconda.sh -b -p /home/vagrant/miniconda
+    echo 'export PATH="/home/vagrant/miniconda/bin:$PATH"' >> /home/vagrant/.bashrc
+    source /home/vagrant/.bashrc
+    chown -R vagrant:vagrant /home/vagrant/miniconda
+    /home/vagrant/miniconda/bin/conda install conda-build anaconda-client anaconda-build -y -q
+  SHELL
 
 end
