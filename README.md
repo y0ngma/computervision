@@ -157,4 +157,10 @@ Filesystem            Size  Used Avail Use% Mounted on
 ...
 //192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
 # 다만, 위의 방법으로는 한번만 마운트되어 접속시마다 해줘야함
+
+# 마운트된 나스파일을 베이그란트 shared_folder로 복사에러
+PermissionError: [Errno 13] Permission denied:
+# 원인은 쓰기권한이 없어서 였음 [유저]:[유저그룹] [경로]
+sudo chown -R vagrant:vagrant jason # 일단 소유권 변경으로 chmod 수정권한 획득
+sudo chmod -R 777 jason # r-x를 rwx로 해당 쓰기권한 부여
 ```
