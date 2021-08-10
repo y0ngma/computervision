@@ -138,7 +138,7 @@ print( "문제가 생긴 영상 : ", *unplayable_video, sep='\n' )
 for worked_dir in worked_dirs:
     if os.path.isdir(worked_dir):
         aimmo_xlsx(log_path+"log_aimmo.xlsx", worked_dir) # 에이모제공용 엑셀 업데이트
-        zip_with_filecount_suffix(worked_dir, worked_dir+'.zip') # 압축하기
+        # zip_with_filecount_suffix(worked_dir, worked_dir+'.zip') # 압축하기
 
 
 
