@@ -133,34 +133,35 @@ python3.8 /vagrant/SHARED_FOLDER/test.py
 
 ### 에러로그
 ```bash
-# 마운트할 폴더 경로 한번에 생성
+## 마운트할 폴더 경로 한번에 생성
 vagrant@ubuntu-bionic:/home$ sudo mkdir -p qtumai/jason/nas/
 vagrant@ubuntu-bionic:/home$ cd qtumai/jason/
 
-# 잘못된 문법
+## 잘못된 문법
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs 192.168.0.12:/homes ./nas
 mount.cifs: bad UNC (192.168.0.12:/homes)
 
-# 터미널에서 who am i 으로 사용자 확인시 vagrant이기 때문에 안되나?
+## 터미널에서 who am i 으로 사용자 확인시 vagrant이기 때문에 안되나?
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas
 Password for root@//192.168.0.12/homes:  **********
 mount error(13): Permission denied
 Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
 
-# 사용자계정을 지정하니 접속됨
+## 사용자계정을 지정하니 접속됨
 vagrant@ubuntu-bionic:/home/qtumai/jason$ sudo mount -t cifs //192.168.0.12/homes ./nas -o username=사용자계정명
 Password for admin@//192.168.0.12/homes:  **********
 
-# 드라이브 마운트 확인
+## 드라이브 마운트 확인
 vagrant@ubuntu-bionic:/home/qtumai/jason$ df -h
 Filesystem            Size  Used Avail Use% Mounted on
 ...
 //192.168.0.12/homes   11T  7.7T  2.9T  73% /home/qtumai/jason/nas
 # 다만, 위의 방법으로는 한번만 마운트되어 접속시마다 해줘야함
 
-# 마운트된 나스파일을 베이그란트 shared_folder로 복사에러
+## 마운트된 나스파일을 베이그란트 shared_folder로 복사에러
 PermissionError: [Errno 13] Permission denied:
 # 원인은 쓰기권한이 없어서 였음 [유저]:[유저그룹] [경로]
 sudo chown -R vagrant:vagrant jason # 일단 소유권 변경으로 chmod 수정권한 획득
 sudo chmod -R 777 jason # r-x를 rwx로 해당 쓰기권한 부여
+# https://codechacha.com/ko/linux-chmod/
 ```
