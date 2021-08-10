@@ -128,7 +128,8 @@ dpkg --get-selections | grep docker
 ## 파이선 코드 실행
 - l
 ```bash
-python3.8 /vagrant/SHARED_FOLDER/test.py
+python3 /vagrant/nas_down.py
+# cd /home/qtumai/jason/SYNCED_FOLDER에서 저장된 파일 확인가능
 ```
 
 ### 에러로그

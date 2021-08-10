@@ -6,11 +6,11 @@ import time, datetime
 import pandas as pd
 import cv2
 
-# archive_path = "//192.168.0.12/homes/brooks/DONJJANG"
-archive_path = "/home/qtumai/jason/nas"
-
-DOWNLOAD_DIR = '/home/qtumai/jason/computervision'
-# DOWNLOAD_DIR = 'C:/Users/home/qtumai/jason/computervision/SHARED_FOLDER'
+# NAS_DIR = "//192.168.0.12/homes/brooks/DONJJANG"
+# NAS_DIR = "/home/qtumai/jason/nas/dataset" # vagrant destory 후 ~homes으로 변경되면
+NAS_DIR = "/home/qtumai/jason/nas"
+# DOWNLOAD_DIR = 'C:/Users/home/qtumai/jason/SYNCED_FOLDER'
+DOWNLOAD_DIR = '/home/qtumai/jason/SYNCED_FOLDER' # 싱크폴더로 저장하면 호스트에서 접근하기 용이
 
 target_shop = 'DONJJANG'
 target_dates = [
@@ -24,7 +24,7 @@ hour_list      = [ '00','01','02','03','04','05','06','07','08','09','10','11',
                    '12','13','14','15','16','17','18','19','20','21','22','23' ]
 target_hours   = hour_list[12:23]
 
-all_file_list = [ file for file in glob.glob(archive_path +"/*.avi") if os.path.getsize(file)>920000000 ]
+all_file_list = [ file for file in glob.glob(NAS_DIR +"/*.avi") if os.path.getsize(file)>920000000 ]
 
 target_path_list = list()
 file_size_list   = list()
@@ -56,12 +56,6 @@ for file_path in all_file_list:
                             if video_name.split('_')[2] == "ch2":
                                 video_camnumber = "ch1"
 
-                        video_minute     = video_datetime[10:12]
-                        video_second     = video_datetime[12:video_name.find('_')]
-                        str_HHMMSS       = video_hour +":"+ video_minute +":"+ video_second
-                        str_HHMMSS       = datetime.datetime.strptime(str_HHMMSS, "%H:%M:%S")
-                        video_time       = video_hour + video_minute + video_second
-                        date_time_prefix = video_date+'_'+video_time
                         # 비디오 길이측정
                         cap = cv2.VideoCapture(file_path)
                         cnt = cap.get(cv2.CAP_PROP_FRAME_COUNT)
@@ -87,13 +81,11 @@ print( '사용가능 파일 갯수= {}, 비율= {}%'.format(
     len(workable_list), int(100*len(workable_list)/len(target_path_list))) )
 
 
-
 # 파일을 로컬로 이동
 for workable in workable_list:
     filename = os.path.basename(workable)
-    print(workable)
-    print(DOWNLOAD_DIR +"/"+ filename)
-    shutil.copy(workable, DOWNLOAD_DIR +"/"+ filename)
+    shutil.move(workable, DOWNLOAD_DIR +"/"+ filename)
+    print('나스->로컬경로:', DOWNLOAD_DIR +"/"+ filename)
 
 
 # 변환 작업
@@ -103,8 +95,8 @@ for workable in workable_list:
 # # 영상길이가 24분 이하일 경우 1000장보다 적게 이미지변환 될 수 있음
 # df23 = df[df['duration']< 24]
 # move_file_list = df[df['duration']<24]['path'].to_list()
-# move_dst_path = archive_path+"/small_file"
-# if not os.path.isdir(archive_path+"/small_file"):
+# move_dst_path = NAS_DIR+"/small_file"
+# if not os.path.isdir(NAS_DIR+"/small_file"):
 #     os.mkdir(move_dst_path)
 # print('경로생성')
 # for move_file in move_file_list:

@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
+  # 호스트의 상위폴더는 미리 생성 해야한다
   config.vm.synced_folder "../SYNCED_FOLDER", "/home/qtumai/jason/SYNCED_FOLDER"
   
   config.vm.provider "virtualbox" do |machine|
