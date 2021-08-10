@@ -85,4 +85,5 @@ if __name__ == "__main__":
     base_path        = "E:\\aimmo"
     target_path_list = glob.glob(base_path+'\\*_image')
     
-    aimmo_xlsx(log_path+"log_aimmo.xlsx", target_path_list)
+    for target_path in target_path_list:
+        aimmo_xlsx(log_path+"log_aimmo.xlsx", target_path)

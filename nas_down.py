@@ -85,10 +85,10 @@ print( '사용가능 파일 갯수= {}, 비율= {}%'.format(
 
 
 # 파일을 로컬로 이동
-for workable in workable_list:
+for workable in workable_list[-2:]:
     filename = os.path.basename(workable)
-    shutil.move(workable, DOWNLOAD_DIR +"/"+ filename)
-    print('나스->로컬경로:', DOWNLOAD_DIR +"/"+ filename)
+    print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
+    shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
 print('이동완료')
 
 
