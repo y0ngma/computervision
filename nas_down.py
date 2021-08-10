@@ -24,7 +24,7 @@ hour_list      = [ '00','01','02','03','04','05','06','07','08','09','10','11',
                    '12','13','14','15','16','17','18','19','20','21','22','23' ]
 target_hours   = hour_list[12:23]
 
-all_file_list = [ file for file in glob.glob(archive_path +"/*.avi") if os.path.getsize(file)>900000000 ]
+all_file_list = [ file for file in glob.glob(archive_path +"/*.avi") if os.path.getsize(file)>920000000 ]
 
 target_path_list = list()
 file_size_list   = list()
