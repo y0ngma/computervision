@@ -37,25 +37,24 @@ for file_path in all_file_list:
     video_shopname   = video_name.split('_')[1]
     if video_shopname != target_shop: continue
     else:
-        video_date       = video_datetime[:8]
+        video_date = video_datetime[:8]
+        video_hour = video_datetime[8:10]
         for target_date in target_dates:
             if video_date != target_date: continue
             else:
-                # 업소별 특징 적용
-                if video_shopname == "DONJJANG": # 어두운 거리 특성상 오전포함, 야간제외
-                    target_hours = hour_list[8:20]
+                # 업소별 특징 적용 1. 어두운 거리 특성상 오전포함, 야간제외
+                if video_shopname == "DONJJANG":
+                    target_hours = hour_list[11:20]
+                video_camnumber  = video_name.split('_')[2]
+                # 업소별 특징 적용 2.업체 요청으로 좌우 채널명 교환
+                if video_shopname == "SW365":
+                    if video_name.split('_')[2] == "ch1":
+                        video_camnumber = "ch2"
+                    if video_name.split('_')[2] == "ch2":
+                        video_camnumber = "ch1"
                 
                 for target_hour in target_hours:
-                    video_hour = video_datetime[8:10]
                     if video_hour == target_hour:
-                        # 업소별 특징 적용
-                        video_camnumber  = video_name.split('_')[2]
-                        if video_shopname == "SW365": # 업체 요청으로 좌우 채널명 교환
-                            if video_name.split('_')[2] == "ch1":
-                                video_camnumber = "ch2"
-                            if video_name.split('_')[2] == "ch2":
-                                video_camnumber = "ch1"
-
                         # 비디오 길이측정
                         cap = cv2.VideoCapture(file_path)
                         cnt = cap.get(cv2.CAP_PROP_FRAME_COUNT)
