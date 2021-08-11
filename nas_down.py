@@ -135,7 +135,6 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
             print('생성된 경로', original_path)
 
         # 1000번째까지의 작업한 사진 저장경로(업체요청)
-        worked_dirs.append(archive_path +"/"+ basename +"_image")
         save_path = archive_path +"/"+ basename +"_image/"+ new_video_name +'/'
         if not os.path.isdir(save_path):
             os.makedirs(save_path, exist_ok=True)
@@ -214,6 +213,8 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
                 # 작업이 끝난 원본파일을 따로 옮겨서 정리
                 shutil.move( file, os.path.join(original_path, file.split('/')[-1]) )
                 print( '여기서 {} -->\n여기로 {}'.format(file, os.path.join(original_path, file.split('/')[-1])) )
+                if archive_path + basename +"_image" not in worked_dirs:
+                    worked_dirs.append(archive_path + basename +"_image")
                 
 
 print( "문제가 생긴 영상 : ", *unplayable_video, sep='\n' )
@@ -221,7 +222,7 @@ for worked_dir in worked_dirs:
     if os.path.isdir(worked_dir):
         print(worked_dir)
         aimmo_xlsx(log_path+"/log_aimmo.xlsx", worked_dir) # 에이모제공용 엑셀 업데이트
-        # zip_with_filecount_suffix(worked_dir, worked_dir+'.zip') # 압축하기
+        zip_with_filecount_suffix(worked_dir, worked_dir+'.zip') # 압축하기
 
 ##########################################################################################################
 
