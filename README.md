@@ -122,6 +122,7 @@ dpkg --get-selections | grep docker
     ```
 1. sudo mount --all
     - 저장 후 곧바로 실행시키기
+    - 안될때 sudo apt install cifs-utils
 
 
 ## 파이선 및 라이브러리 설치
