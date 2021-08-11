@@ -57,15 +57,15 @@ def aimmo_xlsx(log_file, target_path:str):
             df.index = np.arange(1,len(df)+1)
 
     # 한 폴더내에 채널별로 저장된 폴더명(*_ch1, *_ch2)과 해당 폴더내 파일수 측정
-    folder_ch1 = [ path.split("/")[-1] for path in glob.glob(target_path+"/*ch1") ]
-    folder_ch2 = [ path.split("/")[-1] for path in glob.glob(target_path+"/*ch2") ]
-    ch1_cnt = [ len(os.listdir(path)) for path in glob.glob(target_path+"/*ch1") ]
-    ch2_cnt = [ len(os.listdir(path)) for path in glob.glob(target_path+"/*ch1") ]
+    folder_ch1 = [ os.path.basename(path) for path in sorted(glob.glob(target_path+"/*ch1")) ]
+    folder_ch2 = [ os.path.basename(path) for path in sorted(glob.glob(target_path+"/*ch2")) ]
+    ch1_cnt    = [ len(os.listdir(path))  for path in sorted(glob.glob(target_path+"/*ch1")) ]
+    ch2_cnt    = [ len(os.listdir(path))  for path in sorted(glob.glob(target_path+"/*ch1")) ]
     both_channel = list(zip(folder_ch2, folder_ch1, ch2_cnt, ch1_cnt))
     # print(*both_channel, sep='\n')
     cols = ['left', 'right', 'ch2_cnt', 'ch1_cnt']
     to_append  = pd.DataFrame(both_channel, columns=cols)
-    bookmarker = pd.DataFrame([["+"*28, "+"*28, "+"*7, "+"*7]], columns=cols)
+    bookmarker = pd.DataFrame([["+"*20, "+"*20, "+"*5, "+"*5]], columns=cols)
     idx_from_1(to_append)
     print(to_append)
     # 기존 로그 엑셀파일 읽어들여서 업데이트 하기        
@@ -80,10 +80,9 @@ def aimmo_xlsx(log_file, target_path:str):
 
 
 if __name__ == "__main__":
-    PROJECT_DIR      = os.path.dirname( os.path.abspath(__file__) )+"/"
-    log_path         = PROJECT_DIR+'log_folder/' # 로그보관용 폴더경로
-    base_path        = "E:/aimmo"
+    PROJECT_DIR      = os.path.dirname( os.path.abspath(__file__) )
+    base_path        = "C:/Users/home/qtumai/jason/SYNCED_FOLDER"
     target_path_list = glob.glob(base_path+'/*_image')
     
     for target_path in target_path_list:
-        aimmo_xlsx(log_path+"log_aimmo.xlsx", target_path)
+        aimmo_xlsx(PROJECT_DIR+"/log_aimmo.xlsx", target_path)
