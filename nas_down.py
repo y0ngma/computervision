@@ -11,92 +11,94 @@ from myfunctions import zip_with_filecount_suffix, update_log_df, aimmo_xlsx
 # NAS_DIR = "//192.168.0.12/homes/brooks/DONJJANG"
 # NAS_DIR = "/home/qtumai/jason/nas/dataset" # vagrant destory 후 ~homes으로 변경되면
 # DOWNLOAD_DIR = 'C:/Users/home/qtumai/jason/SYNCED_FOLDER'
-NAS_DIR = "/home/qtumai/jason/nas"
+NAS_DIR      = "/home/qtumai/jason/nas"
 DOWNLOAD_DIR = '/home/qtumai/jason/downlaod' # 나스가 아닌 로컬에서 작업하여 처리속도향상
 archive_path = "/home/qtumai/jason/SYNCED_FOLDER" # 싱크폴더로 저장하면 호스트에서 접근하기 용이
 if not os.path.isdir(DOWNLOAD_DIR):
     os.mkdir(DOWNLOAD_DIR)
     print('다운로드 받을 경로 생성')
-print( '다음 나스경로에서{}\n다음 경로로 복사 {}\n산출물은공유폴더에{}'.format(NAS_DIR,DOWNLOAD_DIR,archive_path) )
+print( '다음 나스경로에서\t{}\n다음 경로로 복사후작업\t{}\n산출물은 다음경로에 저장{}'.format(NAS_DIR,DOWNLOAD_DIR,archive_path) )
 
-target_shop = 'DONJJANG'
-target_dates = [
+# 나스에서 다운로드할 상호명과 날짜 및 시간대 설정()
+target_shop   = 'DONJJANG'
+target_dates  = [
 # "20210804",
 # "20210805",
-"20210806",
-"20210807",
-"20210808",
+# "20210806",
+# "20210807",
+# "20210808",
+"20210809"
 ]
-hour_list      = [ '00','01','02','03','04','05','06','07','08','09','10','11',
-                   '12','13','14','15','16','17','18','19','20','21','22','23' ]
-target_hours   = hour_list[12:23]
+hour_list     = [ '00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23' ]
+target_hours  = hour_list[12:23]
+target_hours2 = hour_list[7:8]
+
+# 
+if target_dates:
+    all_file_list    = [ file for file in glob.glob(NAS_DIR +"/*.avi") if os.path.getsize(file)>920000000 ]
+    print('조회된 파일 수 :', len(all_file_list))
+    target_path_list = list()
+    file_size_list   = list()
+    duration_list    = list()
+    # 전체 파일리스트에서 파일명의 날짜와 상호명으로 원하는것만 작업
+    for file_path in all_file_list:
+        filename         = os.path.basename(file_path)
+        video_name       = os.path.splitext( filename )[0]
+        video_datetime   = video_name.split('_')[0]
+        video_shopname   = video_name.split('_')[1]
+        if video_shopname != target_shop: continue
+        else:
+            video_date = video_datetime[:8]
+            video_hour = video_datetime[8:10]
+            for target_date in target_dates:
+                if video_date != target_date: continue
+                else:
+                    # 업소별 특징 적용 1. 어두운 거리 특성상 오전포함, 야간제외
+                    if video_shopname == "DONJJANG":
+                        target_hours = target_hours2
+                    video_camnumber  = video_name.split('_')[2]
+                    # 업소별 특징 적용 2.업체 요청으로 좌우 채널명 교환
+                    if video_shopname == "SW365":
+                        if video_name.split('_')[2] == "ch1":
+                            video_camnumber = "ch2"
+                        if video_name.split('_')[2] == "ch2":
+                            video_camnumber = "ch1"
+                    
+                    for target_hour in target_hours:
+                        if video_hour == target_hour:
+                            # 비디오 길이측정
+                            print('영상길이측정중... : ', file_path)
+                            cap = cv2.VideoCapture(file_path)
+                            cnt = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+                            fps = cap.get(cv2.CAP_PROP_FPS)
+                            cap.release()
+                            if fps == 0: continue
+                            else:
+                                seconds  = int(cnt/fps)
+                                duration = datetime.timedelta(seconds=seconds)
+                                min      = int( str(duration).split(":")[-2] )
+                                # 목표파일, 파일용량, 비디오길이 리스트 생성
+                                duration_list.append(min)
+                                target_path_list.append(file_path)
+                                file_size_list.append( os.path.getsize(file_path) )
+
+    zipped_lists = list( zip(target_path_list, file_size_list, duration_list,) )
+    df = pd.DataFrame( zipped_lists, columns=['path', 'size', 'duration'] )
+    print(df.head())
+    print(df.groupby(by=['duration']).count())
+
+    workable_list = df[df['duration']>=24]['path'].to_list()
+    print( '사용가능 파일 갯수= {}, 비율= {}%'.format(
+        len(workable_list), int(100*len(workable_list)/len(target_path_list))) )
 
 
 
-# all_file_list    = [ file for file in glob.glob(NAS_DIR +"/*.avi") if os.path.getsize(file)>920000000 ]
-# print('조회된 파일 수 :', len(all_file_list))
-# target_path_list = list()
-# file_size_list   = list()
-# duration_list    = list()
-# # 전체 파일리스트에서 파일명의 날짜와 상호명으로 원하는것만 작업
-# for file_path in all_file_list:
-#     filename         = os.path.basename(file_path)
-#     video_name       = os.path.splitext( filename )[0]
-#     video_datetime   = video_name.split('_')[0]
-#     video_shopname   = video_name.split('_')[1]
-#     if video_shopname != target_shop: continue
-#     else:
-#         video_date = video_datetime[:8]
-#         video_hour = video_datetime[8:10]
-#         for target_date in target_dates:
-#             if video_date != target_date: continue
-#             else:
-#                 # 업소별 특징 적용 1. 어두운 거리 특성상 오전포함, 야간제외
-#                 if video_shopname == "DONJJANG":
-#                     target_hours = hour_list[8:20]
-#                 video_camnumber  = video_name.split('_')[2]
-#                 # 업소별 특징 적용 2.업체 요청으로 좌우 채널명 교환
-#                 if video_shopname == "SW365":
-#                     if video_name.split('_')[2] == "ch1":
-#                         video_camnumber = "ch2"
-#                     if video_name.split('_')[2] == "ch2":
-#                         video_camnumber = "ch1"
-                
-#                 for target_hour in target_hours:
-#                     if video_hour == target_hour:
-#                         # 비디오 길이측정
-#                         print('영상길이측정중... : ', file_path)
-#                         cap = cv2.VideoCapture(file_path)
-#                         cnt = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-#                         fps = cap.get(cv2.CAP_PROP_FPS)
-#                         cap.release()
-#                         if fps == 0: continue
-#                         else:
-#                             seconds  = int(cnt/fps)
-#                             duration = datetime.timedelta(seconds=seconds)
-#                             min      = int( str(duration).split(":")[-2] )
-#                             # 목표파일, 파일용량, 비디오길이 리스트 생성
-#                             duration_list.append(min)
-#                             target_path_list.append(file_path)
-#                             file_size_list.append( os.path.getsize(file_path) )
-
-# zipped_lists = list( zip(target_path_list, file_size_list, duration_list,) )
-# df = pd.DataFrame( zipped_lists, columns=['path', 'size', 'duration'] )
-# print(df.head())
-# print(df.groupby(by=['duration']).count())
-
-# workable_list = df[df['duration']>=24]['path'].to_list()
-# print( '사용가능 파일 갯수= {}, 비율= {}%'.format(
-#     len(workable_list), int(100*len(workable_list)/len(target_path_list))) )
-
-
-
-# # 파일을 로컬로 이동
-# for workable in workable_list:
-#     filename = os.path.basename(workable)
-#     print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
-#     shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
-# print('이동완료')
+    # 파일을 로컬로 이동
+    for workable in workable_list:
+        filename = os.path.basename(workable)
+        print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
+        shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
+    print('이동완료')
 
 
 #####################################################################################
@@ -145,9 +147,8 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
             print('생성된 경로', save_path)
 
         # 파일명에서 120000~235959에 해당하는것만 변환
-        target_hours = hour_list[12:24]
         if video_shopname == "DONJJANG": # 특성상 오전포함, 야간제외
-            target_hours = hour_list[7:20]
+            target_hours = target_hours2
 
         for target_hour in target_hours:
             flag = False
