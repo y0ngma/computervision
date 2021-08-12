@@ -42,7 +42,7 @@ if target_dates:
     duration_list    = list()
     # 전체 파일리스트에서 파일명의 날짜와 상호명으로 원하는것만 작업
     for file_path in all_file_list:
-        filename         = os.path.basename(file_path)
+        filename         = os.path.basename( file_path )
         video_name       = os.path.splitext( filename )[0]
         video_datetime   = video_name.split('_')[0]
         video_shopname   = video_name.split('_')[1]
@@ -90,7 +90,7 @@ if target_dates:
     # 파일을 로컬로 이동
     for workable in workable_list:
         filename = os.path.basename(workable)
-        if not os.path.isfile:
+        if not os.path.isfile(DOWNLOAD_DIR +"/"+ filename):
             print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
             shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
     print('이동완료')
@@ -132,7 +132,9 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
         if not os.path.isdir(save_path):
             os.makedirs(save_path, exist_ok=True)
             print('생성된 경로', save_path)
-        if len( os.listdir(save_path) ) == target_image_cnt: continue # 이미 작업한 경우 해당 동영상 작업안함
+        if len( os.listdir(save_path) ) == target_image_cnt: 
+            print('이미 {}장 작업한 폴더{}'.format(target_image_cnt, save_path))
+            continue # 이미 작업한 경우 해당 동영상 작업안함
 
         # 업소별 특징 적용 1.업체 요청으로 좌우 채널명 교환
         video_camnumber  = video_name.split('_')[2]
