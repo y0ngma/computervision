@@ -10,10 +10,14 @@ from myfunctions import zip_with_filecount_suffix, update_log_df, aimmo_xlsx
 
 # NAS_DIR = "//192.168.0.12/homes/brooks/DONJJANG"
 # NAS_DIR = "/home/qtumai/jason/nas/dataset" # vagrant destory 후 ~homes으로 변경되면
-NAS_DIR = "/home/qtumai/jason/nas"
 # DOWNLOAD_DIR = 'C:/Users/home/qtumai/jason/SYNCED_FOLDER'
-DOWNLOAD_DIR = '/home/qtumai/jason/SYNCED_FOLDER' # 싱크폴더로 저장하면 호스트에서 접근하기 용이
-archive_path = "/home/qtumai/jason/SYNCED_FOLDER"
+NAS_DIR = "/home/qtumai/jason/nas"
+DOWNLOAD_DIR = '/home/qtumai/jason/downlaod' # 나스가 아닌 로컬에서 작업하여 처리속도향상
+archive_path = "/home/qtumai/jason/SYNCED_FOLDER" # 싱크폴더로 저장하면 호스트에서 접근하기 용이
+if not os.path.isdir(DOWNLOAD_DIR):
+    os.mkdir(DOWNLOAD_DIR)
+    print('다운로드 받을 경로 생성')
+print( '다음 나스경로에서{}\n다음 경로로 복사 {}\n산출물은공유폴더에{}'.format(NAS_DIR,DOWNLOAD_DIR,archive_path) )
 
 target_shop = 'DONJJANG'
 target_dates = [
