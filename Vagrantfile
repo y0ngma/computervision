@@ -5,6 +5,8 @@ Vagrant.configure("2") do |config|
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
+  # Host의 8000번 포트로 접속하는 것을 Guest의 8000번 포트로 포워딩
+  config.vm.network :forwarded_port, guest: 8000, host: 8000
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
