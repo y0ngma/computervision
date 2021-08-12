@@ -98,6 +98,7 @@ if target_dates:
 
 #####################################################################################
 # 변환 작업
+target_image_cnt = 1000
 original_fps     = 30 # 변환할 원본영상의 fps
 fps_list         = 30 # 영상에서 가져올 프레임 간격
 log_path         = archive_path # 로그보관용 폴더경로
@@ -131,6 +132,7 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
         if not os.path.isdir(save_path):
             os.makedirs(save_path, exist_ok=True)
             print('생성된 경로', save_path)
+        if len( os.listdir(save_path) ) == target_image_cnt: continue # 이미 작업한 경우 해당 동영상 작업안함
 
         # 업소별 특징 적용 1.업체 요청으로 좌우 채널명 교환
         video_camnumber  = video_name.split('_')[2]
@@ -192,7 +194,7 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
                             # 1000장까지만 저장하기(업체요청)
                             cv2.imwrite( save_path+save_name, image )
                             cnt += 1
-                            if cnt == 1000:
+                            if cnt == target_image_cnt:
                                 break
 
                         except Exception as e:
