@@ -30,7 +30,7 @@ target_dates  = [
 "20210809"
 ]
 hour_list     = [ '00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23' ]
-target_hours  = hour_list[12:23]
+target_hours1 = hour_list[12:23]
 target_hours2 = hour_list[7:8]
 
 # 
@@ -56,8 +56,9 @@ if target_dates:
                     # 업소별 특징 적용 1. 어두운 거리 특성상 오전포함, 야간제외
                     if video_shopname == "DONJJANG":
                         target_hours = target_hours2
-                    video_camnumber  = video_name.split('_')[2]
+                    else: target_hours = target_hours1
                     # 업소별 특징 적용 2.업체 요청으로 좌우 채널명 교환
+                    video_camnumber  = video_name.split('_')[2]
                     if video_shopname == "SW365":
                         if video_name.split('_')[2] == "ch1":
                             video_camnumber = "ch2"
@@ -96,8 +97,9 @@ if target_dates:
     # 파일을 로컬로 이동
     for workable in workable_list:
         filename = os.path.basename(workable)
-        print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
-        shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
+        if not os.path.isfile:
+            print('나스->로컬경로 :', DOWNLOAD_DIR +"/"+ filename, 'copyfile 하는중...')
+            shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
     print('이동완료')
 
 
@@ -124,23 +126,22 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
         video_hour       = video_datetime[8:10]
         video_minute     = video_datetime[10:12]
         video_second     = video_datetime[12:video_name.find('_')]
+
+        # "년월일_시분초_매장코드_캠번호" 따위로 저장파일명 및 저장폴더명 설정
         str_HHMMSS       = video_hour +":"+ video_minute +":"+ video_second
         str_HHMMSS       = datetime.datetime.strptime(str_HHMMSS, "%H:%M:%S")
         video_time       = video_hour + video_minute + video_second
-        date_time_prefix = video_date+'_'+video_time
-
-        # "년월일_시분초_매장코드_캠번호" 따위로 파일명 수정 및 저장폴더명 설정
-        new_video_name   = date_time_prefix +"_"+ video_shopname +"_"+ video_camnumber # 19991231_235959_JJIN_ch2
+        new_video_name   = video_date +'_'+ video_time +"_"+ video_shopname +"_"+ video_camnumber # 19991231_235959_JJIN_ch2
         basename         = video_shopname +'_'+ video_date # JJIN_19991231
-
+       
         # 작업한 원본영상 옮겨놓을 경로 
         FPS           = '_' + str(1 + original_fps - fps_list) + 'FPS'
         original_path = archive_path +'/'+ basename +'_ori/'
         if not os.path.isdir(original_path):
             os.makedirs(original_path, exist_ok=True)
             print('생성된 경로', original_path)
-
-        # 1000번째까지의 작업한 사진 저장경로(업체요청)
+        
+        # 작업한 사진 저장경로
         save_path = archive_path +"/"+ basename +"_image/"+ new_video_name +'/'
         if not os.path.isdir(save_path):
             os.makedirs(save_path, exist_ok=True)
@@ -149,6 +150,7 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
         # 파일명에서 120000~235959에 해당하는것만 변환
         if video_shopname == "DONJJANG": # 특성상 오전포함, 야간제외
             target_hours = target_hours2
+        else: target_hours = target_hours1
 
         for target_hour in target_hours:
             flag = False
@@ -187,18 +189,18 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
                                 frame_str = '00'+frame_str
                             elif len(frame_str) == 8:
                                 frame_str = '0'+frame_str
-                            
-                            # 녹화시점의 시간변수에 1초를 더한것을 파일명으로 저장(1초에 1장만 저장될때)
+                                                        
+
+                            # 녹화시점의 시간변수에 1초를 더한것을 저장할 파일명으로 설정(1초에 1장만 저장될때)
                             sec_to_add  = datetime.timedelta(seconds=1)
                             str_HHMMSS += sec_to_add
                             str_time    = datetime.datetime.strftime(str_HHMMSS, '%H%M%S')
                             time_infix  = video_date+'_'+str_time
                             save_name   = 'frame{}_{}_{}.jpg'.format(frame_str, time_infix, video_camnumber)
 
+                            # 1000장까지만 저장하기(업체요청)
                             cv2.imwrite( save_path+save_name, image )
                             cnt += 1
-                            
-                            # 1000장까지만 작업하기(업체요청)
                             if cnt == 1000:
                                 break
 
