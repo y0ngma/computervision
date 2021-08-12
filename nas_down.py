@@ -57,13 +57,6 @@ if target_dates:
                     if video_shopname == "DONJJANG":
                         target_hours = target_hours2
                     else: target_hours = target_hours1
-                    # 업소별 특징 적용 2.업체 요청으로 좌우 채널명 교환
-                    video_camnumber  = video_name.split('_')[2]
-                    if video_shopname == "SW365":
-                        if video_name.split('_')[2] == "ch1":
-                            video_camnumber = "ch2"
-                        if video_name.split('_')[2] == "ch2":
-                            video_camnumber = "ch1"
                     
                     for target_hour in target_hours:
                         if video_hour == target_hour:
@@ -114,19 +107,13 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
     FILE_TO_WORK     = True
     video_name       = os.path.splitext(file)[0].split('/')[-1]
     if video_name[:4] == '2021' and video_name[14] == '_':
-        video_datetime   = video_name.split('_')[0]
-        video_shopname   = video_name.split('_')[1]
         video_camnumber  = video_name.split('_')[2]
-        if video_shopname == "SW365": # 업체 요청으로 좌우 채널명 교환
-            if video_name.split('_')[2] == "ch1":
-                video_camnumber = "ch2"
-            if video_name.split('_')[2] == "ch2":
-                video_camnumber = "ch1"
+        video_shopname   = video_name.split('_')[1]
+        video_datetime   = video_name.split('_')[0]
         video_date       = video_datetime[:8]
         video_hour       = video_datetime[8:10]
         video_minute     = video_datetime[10:12]
         video_second     = video_datetime[12:video_name.find('_')]
-
         # "년월일_시분초_매장코드_캠번호" 따위로 저장파일명 및 저장폴더명 설정
         str_HHMMSS       = video_hour +":"+ video_minute +":"+ video_second
         str_HHMMSS       = datetime.datetime.strptime(str_HHMMSS, "%H:%M:%S")
@@ -134,21 +121,26 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
         new_video_name   = video_date +'_'+ video_time +"_"+ video_shopname +"_"+ video_camnumber # 19991231_235959_JJIN_ch2
         basename         = video_shopname +'_'+ video_date # JJIN_19991231
        
-        # 작업한 원본영상 옮겨놓을 경로 
+        # 작업한 원본영상 옮겨놓을 경로 및 프레임이미지 저장경로 생성 
         FPS           = '_' + str(1 + original_fps - fps_list) + 'FPS'
         original_path = archive_path +'/'+ basename +'_ori/'
+        save_path     = archive_path +"/"+ basename +"_image/"+ new_video_name +'/'
         if not os.path.isdir(original_path):
             os.makedirs(original_path, exist_ok=True)
             print('생성된 경로', original_path)
-        
-        # 작업한 사진 저장경로
-        save_path = archive_path +"/"+ basename +"_image/"+ new_video_name +'/'
         if not os.path.isdir(save_path):
             os.makedirs(save_path, exist_ok=True)
             print('생성된 경로', save_path)
 
-        # 파일명에서 120000~235959에 해당하는것만 변환
-        if video_shopname == "DONJJANG": # 특성상 오전포함, 야간제외
+        # 업소별 특징 적용 1.업체 요청으로 좌우 채널명 교환
+        video_camnumber  = video_name.split('_')[2]
+        if video_shopname == "SW365":
+            if video_name.split('_')[2] == "ch1":
+                video_camnumber = "ch2"
+            if video_name.split('_')[2] == "ch2":
+                video_camnumber = "ch1"
+        # 업소별 특징 적용 2. 어두운 거리 특성상 오전포함, 야간제외
+        if video_shopname == "DONJJANG":
             target_hours = target_hours2
         else: target_hours = target_hours1
 
@@ -189,7 +181,6 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
                                 frame_str = '00'+frame_str
                             elif len(frame_str) == 8:
                                 frame_str = '0'+frame_str
-                                                        
 
                             # 녹화시점의 시간변수에 1초를 더한것을 저장할 파일명으로 설정(1초에 1장만 저장될때)
                             sec_to_add  = datetime.timedelta(seconds=1)
@@ -222,7 +213,6 @@ for file in glob.glob( DOWNLOAD_DIR+'/*.avi' ):
                 print( '여기서 {} -->\n여기로 {}'.format(file, os.path.join(original_path, file.split('/')[-1])) )
                 if archive_path + basename +"_image" not in worked_dirs:
                     worked_dirs.append(archive_path + basename +"_image")
-                
 
 print( "문제가 생긴 영상 : ", *unplayable_video, sep='\n' )
 for worked_dir in worked_dirs:
