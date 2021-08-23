@@ -27,13 +27,12 @@ target_dates  = [
 # "20210806",
 # "20210807",
 # "20210808",
-"20210809"
 ]
 hour_list     = [ '00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23' ]
 target_hours1 = hour_list[12:23]
 target_hours2 = hour_list[7:8]
 
-# 
+## 나스에서 다운로드 ##########################################################################################
 if target_dates:
     all_file_list    = [ file for file in glob.glob(NAS_DIR +"/*.avi") if os.path.getsize(file)>920000000 ]
     print('조회된 파일 수 :', len(all_file_list))
@@ -86,7 +85,6 @@ if target_dates:
         len(workable_list), int(100*len(workable_list)/len(target_path_list))) )
 
 
-
     # 파일을 로컬로 이동
     for workable in workable_list:
         filename = os.path.basename(workable)
@@ -95,9 +93,7 @@ if target_dates:
             shutil.copyfile(workable, DOWNLOAD_DIR +"/"+ filename)
     print('이동완료')
 
-
-#####################################################################################
-# 변환 작업
+## 변환작업 ############################################################################
 target_image_cnt = 1000
 original_fps     = 30 # 변환할 원본영상의 fps
 fps_list         = 30 # 영상에서 가져올 프레임 간격
